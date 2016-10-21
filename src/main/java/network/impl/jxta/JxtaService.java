@@ -32,6 +32,7 @@ import network.api.ServiceListener;
 import network.api.advertisement.Advertisement;
 import network.api.service.Service;
 import network.impl.MessagesGeneric;
+import network.impl.messages.ContractMessage;
 
 /**
  * This is the Jxta implementation of {@link Service}
@@ -190,6 +191,27 @@ public class JxtaService implements Service, DiscoveryListener, PipeMsgListener{
 			e.printStackTrace();
 		}
 	}
+	/*public void sendContracts(ContractMessage m, String... uris)
+	{
+		Message message = toJxtaMessage(m);
+		HashSet<PeerID> to = new HashSet<PeerID>();
+		for(String pidUri: uris) {
+			try {
+				PeerID pid = PeerID.create(new URI(pidUri));
+				to.add(pid);
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			OutputPipe pipe = pg.getPipeService().createOutputPipe(getAdvertisement(), to, 3000);
+			pipe.send(message);
+			pipe.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}*/
 
 
 	@Override
