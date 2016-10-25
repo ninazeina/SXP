@@ -10,6 +10,7 @@ import network.api.Peer;
 import network.api.service.Service;
 import network.impl.jxta.AdvertisementBridge;
 import network.impl.jxta.AdvertisementInstaciator;
+import network.impl.jxta.JxtaContractService;
 import network.impl.jxta.JxtaItemService;
 import network.impl.jxta.JxtaItemsSenderService;
 import network.impl.jxta.JxtaPeer;
@@ -53,7 +54,11 @@ public class PeerFactory {
 		
 		Service itemsSender = new JxtaItemsSenderService();
 		itemsSender.initAndStart(p);
+		
+		Service contract = new JxtaContractService();
+		contract.initAndStart(p);
 		return p;
+		
 	}
 	
 	/**
