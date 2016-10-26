@@ -38,21 +38,13 @@ public class ContractTest {
 		setPeer2(PeerFactory.createDefaultAndStartPeerForTest());
 		System.out.println("\n");
 		
-		for (Service s : getPeer1().getServices())
-		{
-			System.out.println(s.getName());
-		}
-		for (Service s : getPeer2().getServices())
-		{
-			System.out.println(s.getName());
-		}
 		setContractService1((ContractService)getPeer1().getService("contracts"));
 		setContractService2((ContractService)getPeer2().getService("contracts"));
 		getContractService1().addListener(new ContractListener(), getPeer2().getUri());
 		getContractService2().addListener(new ContractListener(), getPeer1().getUri());
 		
 		
-		getContractService1().sendContract("titi", getPeer2().getUri(), this.getPeer1().getUri());
+		getContractService1().sendContract("contrat n°1", getPeer2().getUri(),"Patates","Carottes", this.getPeer1().getUri());
 		System.out.println("\n");
 		try {
 			Thread.sleep(1000);
@@ -60,7 +52,7 @@ public class ContractTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		getContractService2().sendContract("toto", getPeer1().getUri(), this.getPeer2().getUri());
+		getContractService2().sendContract("contrat n°2", getPeer1().getUri(),"Carottes","Pommes", this.getPeer2().getUri());
 		System.out.println("\n");
 		try {
 			Thread.sleep(1000);
@@ -68,7 +60,7 @@ public class ContractTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		getContractService1().sendContract("tata", getPeer2().getUri(), this.getPeer1().getUri());
+		getContractService1().sendContract("contrat n°3", getPeer2().getUri(),"Pommes","Noix", this.getPeer1().getUri());
 		System.out.println("\n");
 		try {
 			Thread.sleep(1000);
@@ -76,7 +68,7 @@ public class ContractTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		getContractService2().sendContract("tutu", getPeer1().getUri(), this.getPeer2().getUri());
+		getContractService2().sendContract("contrat n°4", getPeer1().getUri(),"Salades","poivrons", this.getPeer2().getUri());
 		System.out.println("\n");
 		try {
 			Thread.sleep(1000);

@@ -30,12 +30,14 @@ public class JxtaContractService extends JxtaService implements ContractService
 	}*/
 	
 	@Override
-	public void sendContract(String title, String who, String... peerURIs) 
+	public void sendContract(String title, String who, String itemVoulu, String itemAEchanger,  String... peerURIs) 
 	{
 		ContractMessage m = new ContractMessage();
 		m.setTitle(title);
 		m.setWho(who);
 		m.setSource(this.peerUri);
+		m.setItemAEchanger(itemAEchanger);
+		m.setItemVoulu(itemVoulu);
 		this.sendMessages(m, peerURIs);
 	}
 	
