@@ -20,8 +20,8 @@ public class CryptCommander {
     return new String(hasher.getHash(input.getBytes()));
   }
 
-  public static void main(String[] args) {
+  /*public static void main(String[] args) {
 
     RestServerFactory.createAndStartRestServer("jetty", 8080, "crypt");
-  }
+  }*/
 }

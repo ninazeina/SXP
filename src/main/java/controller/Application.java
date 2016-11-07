@@ -20,6 +20,9 @@ public class Application {
 	private Peer peer;
 	private Authentifier auth;
 	
+	// variable For test
+	private int serveur;
+	
 	public Application() {
 		if(instance != null) {
 			throw new RuntimeException("Application can be instanciate only once !");
@@ -38,6 +41,7 @@ public class Application {
 	}
 	
 	public void runForTests(int restPort) {
+		setServeur(restPort);
 		Properties p = System.getProperties();
 		p.put("derby.system.home", "./.db-" + restPort + "/");
 		new UserSyncManagerImpl(); //just init the db
@@ -49,9 +53,22 @@ public class Application {
 	public static void main(String[] args) {
 		new Application();
 		Application.getInstance().runForTests(8081);
-		
+
 	}
 
+	//Function for test
+	
+	public void affichePeer()
+	{
+		System.out.println("Peer : "+getPeer().getUri());
+	}
+	
+	//Function for test
+	
+	public void afficheServeur()
+	{
+		System.out.println("serveur : "+getServeur());
+	}
 	public Peer getPeer() {
 		return peer;
 	}
@@ -66,5 +83,13 @@ public class Application {
 
 	public void setAuth(Authentifier auth) {
 		this.auth = auth;
+	}
+
+	public int getServeur() {
+		return serveur;
+	}
+
+	public void setServeur(int serveur) {
+		this.serveur = serveur;
 	}
 }

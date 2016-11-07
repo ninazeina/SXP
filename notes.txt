@@ -1,0 +1,30 @@
+Pour lancer deux SXP différents :
+
+    dans un premier terminal:
+        aller dans SXP/ et lancer gradle run
+
+    dans un deuxième terminal:
+        aller dans SXP/src/main/js et lancer chromium-browser --disable-web-security --user-data-dir html/index.html
+
+    ensuite dans la fenetre chromium créer un compte sur le serveur 8081 (celui par defaut créer dans application.java)
+
+    changer dans application.java le serveur qui se lance par exemple le numéro 8082
+
+    dans un troisième terminal:
+        relancer un backend comme dans le premier terminal
+
+    dans un quatrième:
+        lancer un frontend comme dans le deuxième terminal
+
+    dans la nouvelle fenetre fraichement ouverte créer un compte sur le serveur 8082
+
+Et voilà.
+
+Lignes de commande dans l'URL :
+
+    Pour afficher le PeerUi de l'utilisateur :
+        http://localhost:8082/command/network/affichePeer (bien sur mettre le numéro du serveur actuel)
+
+    Pour afficher le Serveur :
+        http://localhost:8082/command/network/afficheServeur
+        inutile etant donnée qu'on utilise le nom du serveur dans l'URL donc on le connait déja (sert juste de test)
