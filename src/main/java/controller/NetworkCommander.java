@@ -1,6 +1,7 @@
 package controller;
 
 import javax.ws.rs.GET;  //REST-related dependencies
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -8,8 +9,14 @@ import javax.ws.rs.core.MediaType;
 
 import crypt.api.hashs.Hasher; //module to test dependencies
 import crypt.factories.HasherFactory;
+import model.entity.LoginToken;
+import network.api.ContractService;
 import network.api.Peer;
+import network.impl.ContractListener;
+import network.impl.jxta.JxtaContractService;
+import rest.api.Authentifier;
 import rest.api.ServletPath;
+import rest.impl.SimpleAuthentifier;
 
 @ServletPath("/command/network/*")  //url path. PREFIX WITH COMMAND/ !!!
 @Path("/")
@@ -18,7 +25,7 @@ public class NetworkCommander {
     @Path("affichePeer") //a way to name the pieces of the query
     public String affichePeer() {
     	Peer p = Application.getInstance().getPeer();
-    	
+    	System.out.println("pipipipipipipirupi");
     	return p.getUri();
     }
     
@@ -31,9 +38,40 @@ public class NetworkCommander {
     }
     
     @GET
-    @Path("envoyerMessage/{input1}/{input2}")
-    public String envoyerMessage(@PathParam("input1") String peer1, @PathParam("input2") String peer2)
+    @Path("afficheToken")
+    public String afficheToken()
     {
-    	return "Message envoye de "+peer1+" vers "+peer2;
+    	Authentifier auth = Application.getInstance().getAuth();
+    	LoginToken token = new LoginToken();
+		token.setToken(auth.getToken("aaa", "aaa"));
+		String password = Application.getInstance().getAuth().getPassword(token.getToken());
+    	return token.getToken()+"\n"+password;
+    	
+    	//return (token == null ? "test":token);
     }
+    
+    @GET
+    @Path("ajouteListener/{input}")
+    public String ajouteListener(@PathParam("input") String peer)
+    {
+    	/*Authentifier auth = Application.getInstance().getAuth();
+    	LoginToken token = new LoginToken();
+		token.setToken(auth.getToken("aaa", "aaa"));
+    	Application.getInstance().getPeer().getService(JxtaContractService.NAME).addListener(new ContractListener(), token.getToken() == null ? "test":token.getToken());
+    	return "Listener ajoutée sur le token : "+token.getToken();*/
+    	Application.getInstance().getPeer().getService(JxtaContractService.NAME).addListener(new ContractListener(), peer);
+    	return "Listener ajoutée sur le peer : "+peer;
+    }
+    
+    @GET
+    @Path("envoyerMessage/{input1}/{input2}/{input3}/{input4}")
+    public String envoyerMessage(@PathParam("input1") String nomContrat, @PathParam("input2") String destinataire, 
+    		@PathParam("input3") String itemVoulu, @PathParam("input4") String itemAEchanger)
+    {
+    	Peer p = Application.getInstance().getPeer();
+    	ContractService service = (ContractService) p.getService(JxtaContractService.NAME);
+    	service.sendContract(nomContrat, p.getUri() , itemVoulu, itemAEchanger, destinataire);
+    	return "Message envoye de "+p.getUri()+" vers "+destinataire;
+    }
+    
 }

@@ -23,8 +23,20 @@ Et voilà.
 Lignes de commande dans l'URL :
 
     Pour afficher le PeerUi de l'utilisateur :
-        http://localhost:8082/command/network/affichePeer (bien sur mettre le numéro du serveur actuel)
+        http://localhost:8081/command/network/affichePeer (bien sur mettre le numéro du serveur actuel)
 
     Pour afficher le Serveur :
-        http://localhost:8082/command/network/afficheServeur
+        http://localhost:8081/command/network/afficheServeur
         inutile etant donnée qu'on utilise le nom du serveur dans l'URL donc on le connait déja (sert juste de test)
+
+    Pour envoyer un message :
+        recuperer chez le destinataire son PeerUi via la commande précedente, ensuite
+        http://localhost:8081/command/network/envoyerMessage/{nomContrat}/{destinataire}/{itemVoulu}/{itemAEchanger}
+        avec :
+            nomContrat = nom du contrat
+            destinataire = PeerUi du destinataire
+            itemVoulu = nom de l'item voulu
+            itemAEchanger = nom de l'item a echanger contre cet item voulu
+        ex :
+        http://localhost:8081/command/network/envoyerMessage/Contrat/urn:jxta:cbid-59616261646162614A78746150325033B1C95D8348BF047AC660642351E7E3D503/patate/carotte
+
