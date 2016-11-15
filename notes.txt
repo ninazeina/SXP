@@ -6,17 +6,17 @@ Pour lancer deux SXP différents :
     dans un deuxième terminal:
         aller dans SXP/src/main/js et lancer chromium-browser --disable-web-security --user-data-dir html/index.html
 
-    ensuite dans la fenetre chromium créer un compte sur le serveur 8081 (celui par defaut créer dans application.java)
+    ensuite dans la fenêtre chromium créer un compte sur le serveur 8081 (celui par defaut créer dans application.java)
 
-    changer dans application.java le serveur qui se lance par exemple le numéro 8082
+    changer dans application.java le serveur qui se lance, par exemple le numéro 8082
 
     dans un troisième terminal:
-        relancer un backend comme dans le premier terminal
+        relancer un backend comme avec le premier terminal
 
     dans un quatrième:
-        lancer un frontend comme dans le deuxième terminal
+        lancer un frontend comme avec le deuxième terminal
 
-    dans la nouvelle fenetre fraichement ouverte créer un compte sur le serveur 8082
+    dans la nouvelle fenêtre fraichement ouverte créer un compte sur le serveur 8082
 
 Et voilà.
 
@@ -30,7 +30,8 @@ Lignes de commande dans l'URL :
         inutile etant donnée qu'on utilise le nom du serveur dans l'URL donc on le connait déja (sert juste de test)
 
     Pour envoyer un message :
-        recuperer chez le destinataire son PeerUi via la commande précedente, ensuite
+        Il faut au préalable que l'autre correspondant ai ajouté un listener sur votre PeerUi,
+        récupérer ensuite chez le destinataire son PeerUi via la commande précedente, pour finir :
         http://localhost:8081/command/network/envoyerMessage/{nomContrat}/{destinataire}/{itemVoulu}/{itemAEchanger}
         avec :
             nomContrat = nom du contrat
@@ -39,4 +40,22 @@ Lignes de commande dans l'URL :
             itemAEchanger = nom de l'item a echanger contre cet item voulu
         ex :
         http://localhost:8081/command/network/envoyerMessage/Contrat/urn:jxta:cbid-59616261646162614A78746150325033B1C95D8348BF047AC660642351E7E3D503/patate/carotte
+
+    Pour ajouter un listener sur un PeerUi :
+        http://localhost:8081/command/network/ajouterListener/{PeerUi}
+
+
+Après avoir chercher des heures pour trouver pourquoi mes fonctions envoyerMessage et ajouterListener ne marchaient pas, j'ai finis par remarquer qu'en faite je m'ettais juste
+trompé sur le nom du type de service "contrat" au lieu de "contracts".
+Pendant Cette recherche j'ai découvert cependant comment on pourrait faire pour ajouter les listeners nécessaire automatiquement sur les utilisateurs et non les PeerUi,
+en faite c'est déja implémenté dans la class Search.
+Chaque User a en faite un Token definie et le Listener est ajouté sur celui ci et non sur le PeerUi.
+Par contre certaines choses restent encore flou :    
+                                                    -On dirait que le listener est ajouté sur lui meme c'est a dire le token de l'utilisateur lui même.
+                                                    -Il faudrait apparement que chaque utlisateur "s'advertise"
+
+Comme dans notre projet le but n'est pas vraiment d'implementer la partie Message de SXP on va se contenter de ce que l'on a reussis a implémenter au dessus et continuer le projet
+vers l'écriture de la blockchain. Surtout vu le peu de temps qu'il nous reste.
+
+    
 

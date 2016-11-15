@@ -1,14 +1,8 @@
 package controller;
 
 import javax.ws.rs.GET;  //REST-related dependencies
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
-import crypt.api.hashs.Hasher; //module to test dependencies
-import crypt.factories.HasherFactory;
 import model.entity.LoginToken;
 import network.api.ContractService;
 import network.api.Peer;
@@ -16,7 +10,6 @@ import network.impl.ContractListener;
 import network.impl.jxta.JxtaContractService;
 import rest.api.Authentifier;
 import rest.api.ServletPath;
-import rest.impl.SimpleAuthentifier;
 
 @ServletPath("/command/network/*")  //url path. PREFIX WITH COMMAND/ !!!
 @Path("/")
@@ -25,7 +18,6 @@ public class NetworkCommander {
     @Path("affichePeer") //a way to name the pieces of the query
     public String affichePeer() {
     	Peer p = Application.getInstance().getPeer();
-    	System.out.println("pipipipipipipirupi");
     	return p.getUri();
     }
     
@@ -41,11 +33,15 @@ public class NetworkCommander {
     @Path("afficheToken")
     public String afficheToken()
     {
+    	/*
+    	 * Juste une fonction test
+    	 */
     	Authentifier auth = Application.getInstance().getAuth();
     	LoginToken token = new LoginToken();
 		token.setToken(auth.getToken("aaa", "aaa"));
+        String login = Application.getInstance().getAuth().getLogin(token.getToken());
 		String password = Application.getInstance().getAuth().getPassword(token.getToken());
-    	return token.getToken()+"\n"+password;
+    	return token.getToken()+"\n Password"+password+"\n Login"+login;
     	
     	//return (token == null ? "test":token);
     }
@@ -54,6 +50,9 @@ public class NetworkCommander {
     @Path("ajouteListener/{input}")
     public String ajouteListener(@PathParam("input") String peer)
     {
+    	/*
+    	 * Début d'implementation de Listener sur le Token
+    	 */
     	/*Authentifier auth = Application.getInstance().getAuth();
     	LoginToken token = new LoginToken();
 		token.setToken(auth.getToken("aaa", "aaa"));
