@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="SXP1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/build/distributions/SXP.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

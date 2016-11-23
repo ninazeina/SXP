@@ -29,17 +29,17 @@ public class Application {
 		}
 		instance = this;
 	}
-	
+
 	public static Application getInstance()	{
 		return instance;
 	}
-	
+
 	public void run() {
 		setPeer(PeerFactory.createDefaultAndStartPeer());
 		setAuth(AuthentifierFactory.createDefaultAuthentifier());
 		RestServerFactory.createAndStartDefaultRestServer(8080); //start the rest api
 	}
-	
+
 	public void runForTests(int restPort) {
 		setServeur(restPort);
 		Properties p = System.getProperties();
