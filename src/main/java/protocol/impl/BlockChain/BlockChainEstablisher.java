@@ -17,7 +17,7 @@ public class BlockChainEstablisher {
 	private ContractMessage contract;
 	private ContractService serviceDest;
 	private ContractService serviceSrc;
-	private EstablisherListener l;
+	//private EstablisherListener l;
 	private String src;
 	private String dest;
 	
@@ -42,7 +42,23 @@ public class BlockChainEstablisher {
 		{
 			if(w.toString().equals("ACCEPT"))
 			{
-				System.out.println("prout\nprout\nprout\n");
+				/*
+				 * Envoyer le contrat sur la blockchain !
+				 * Pour l'instant le contrat a comme arguments :
+				 * WHO : la personne qui envoie le contrat
+				 * type : son type donc ici "contracts"
+				 * title : titre du contrat
+				 * sourceUri : destinataires du contract
+				 * itemVoulu : itemVoulu
+				 * itemAEchanger : itemAEchanger
+				 * 
+				 * voir la classe ContractMessage
+				 * 
+				 * Pour récupérer les String de ces arguments faire : getContract().getMessage("arguments");
+				 * avec arguments = WHO, type, itemVoulu, etc ..
+				 * 
+				 * bien entendu on peut changer les clauses du contrat en changeant/ rajoutants des arguments
+				 */
 			}
 			setWish(w);
 			getServiceDest().sendWish(getWish(),src, dest);
@@ -72,7 +88,7 @@ public class BlockChainEstablisher {
 		return s;
 	}
 
-	public void addListener(EstablisherListener l) {
+	/*public void addListener(EstablisherListener l) {
 		this.l = l;
 
 	}
@@ -80,7 +96,7 @@ public class BlockChainEstablisher {
 	public void notifyListeners(Status s) 
 	{
 		this.l.establisherEvent(s);
-	}
+	}*/
 
 	public ContractService getServiceDest() {
 		return serviceDest;

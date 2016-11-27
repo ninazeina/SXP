@@ -60,8 +60,11 @@ public class ControllerTest
 		BlockChainEstablisher establisher = new BlockChainEstablisher();
 		establisher.initialize(getContractService1(),getContractService2());
 		establisher.start("contrat n°1", getPeer2().getUri(),itemVoulu.getTitle(),itemAEchanger.getTitle(), this.getPeer1().getUri());
-		//establisher.addListener(new BCEstablisherListener());
 		
+		/*
+		 * on met des pauses sinon les messages s'affiche dans le mauvais ordres
+		 * et le dernier ne s'affiche pas dans le test gradle
+		 */
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
