@@ -8,12 +8,15 @@ public class ContractListener implements ServiceListener {
 
 	@Override
 	public void notify(Messages messages) {
-		System.out.println("message recu");
-		for(String s: messages.getNames())
+		if(messages.getMessage("type").equals("contracts"))
 		{
-			System.out.println(s);
-			System.out.println(messages.getMessage(s));
+				System.out.println("Item a echanger : "+messages.getMessage("itemAEchanger"));
+				System.out.println("Item Voulu : "+messages.getMessage("itemVoulu")+"\n");
 		}
+		
+		else if(messages.getMessage("type").equals("wish"))
+			System.out.println(messages.getMessage("wish"));
+		
 	}
 
 }
