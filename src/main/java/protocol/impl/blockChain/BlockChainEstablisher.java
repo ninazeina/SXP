@@ -1,4 +1,4 @@
-package protocol.impl.BlockChain;
+package protocol.impl.blockChain;
 
 import network.api.ContractService;
 import network.api.Peer;
