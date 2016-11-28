@@ -21,47 +21,76 @@ public class BlockChainEstablisher {
 	private String src;
 	private String dest;
 	
-	public void initialize(ContractService src, ContractService dest) {
-		this.setServiceSrc(src);
-		this.setServiceDest(dest);
+	/*
+	 * initialise le contrat 
+	 * Ajoute Les peers de la source et de la destinnation
+	 * Ajoute les service gerant le contrat des peer de source et destination
+	 * Permet d'envoyer et de voir(depuis la source) les réponses du destinataire
+	 * Met le voeux a neutre et le status a nul part
+	 */
+	public void initialize(String source, String dest,ContractService srcService, ContractService destService) {
+		this.setServiceSrc(srcService);
+		this.setServiceDest(destService);
+		setSrc(source);
+		setDest(dest);
 		w = Wish.NEUTRAL;
 		s = Status.NOWHERE;
 	}
 
 	
-	public void start(String nomContrat,String source, String itemVoulu, String itemAEchanger,String dest) {
-		setSrc(source);
-		setDest(dest);
-		
-		this.contract = getServiceSrc().sendContract(nomContrat,source,itemVoulu,itemAEchanger,dest);
+	 // Ajoute le contrat a l'establisher  et met le status a FINALIZED
+	public void start(String nomContrat,String itemVoulu, String itemAEchanger) {
+
+		this.contract = getServiceSrc().sendContract(nomContrat,getSrc(),itemVoulu,itemAEchanger,getDest());
+		setStatus(Status.FINALIZED);
 	}
+	
+	/*
+	 * Envois le voeux de la source a la destinnation et change le status en conséquence
+	 * si la source est différent de la destination de l'establisher c'est qu'il y a une erreur
+	 */
 	
 	public void sendWish(Wish w, String src, String dest)
 	{
 		if(src.equals(getDest()))
 		{
-			if(w.toString().equals("ACCEPT"))
+			if(getStatus().equals(Status.CANCELLED))
+				System.out.println("imposible d'envoyer le voeux le contrat et déja finis");
+			else
 			{
-				/*
-				 * Envoyer le contrat sur la blockchain !
-				 * Pour l'instant le contrat a comme arguments :
-				 * WHO : la personne qui envoie le contrat
-				 * type : son type donc ici "contracts"
-				 * title : titre du contrat
-				 * sourceUri : destinataires du contract
-				 * itemVoulu : itemVoulu
-				 * itemAEchanger : itemAEchanger
-				 * 
-				 * voir la classe ContractMessage
-				 * 
-				 * Pour récupérer les String de ces arguments faire : getContract().getMessage("arguments");
-				 * avec arguments = WHO, type, itemVoulu, etc ..
-				 * 
-				 * bien entendu on peut changer les clauses du contrat en changeant/ rajoutants des arguments
-				 */
+				if(getStatus().equals(Status.NOWHERE))
+					System.out.println("impossible d'envoyer le voeux le contrat n'est pas encore commencé");
+				else
+				{
+					if(w.toString().equals("ACCEPT"))
+					{
+						/*
+						 * Envoyer le contrat sur la blockchain !
+						 * Pour l'instant le contrat a comme arguments :
+						 * WHO : la personne qui envoie le contrat
+						 * type : son type donc ici "contracts"
+						 * title : titre du contrat
+						 * sourceUri : destinataires du contract
+						 * itemVoulu : itemVoulu
+						 * itemAEchanger : itemAEchanger
+						 * 
+						 * voir la classe ContractMessage
+						 * 
+						 * Pour récupérer les String de ces arguments faire : getContract().getMessage("arguments");
+						 * avec arguments = WHO, type, itemVoulu, etc ..
+						 * 
+						 * bien entendu on peut changer les clauses du contrat en changeant/ rajoutants des arguments
+						 */
+						setStatus(Status.SIGNING);
+					}
+					else if(w.toString().equals("REFUSE"))
+					{
+						setStatus(Status.CANCELLED);
+					}
+					setWish(w);
+					getServiceDest().sendWish(getWish(),src, dest);
+				}
 			}
-			setWish(w);
-			getServiceDest().sendWish(getWish(),src, dest);
 		}
 		else
 			System.out.println("erreur la personnes essayant d'accepter le contrat n'est pas la bonne");
@@ -84,6 +113,11 @@ public class BlockChainEstablisher {
 		return w;
 	}
 
+	public void setStatus(Status status)
+	{
+		this.s = status;
+	}
+	
 	public Status getStatus() {
 		return s;
 	}

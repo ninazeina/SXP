@@ -2,6 +2,7 @@ package controller.impl;
 
 import java.util.Properties;
 
+
 import org.junit.Test;
 import static org.junit.Assert.*; //JUnit
 
@@ -23,6 +24,8 @@ import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
 import rest.factories.RestServerFactory;
 
+import protocol.api.Status;
+
 public class ControllerTest 
 {
 	private Peer peer1;
@@ -30,6 +33,17 @@ public class ControllerTest
 	
 	private ContractService contractService1;
 	private ContractService contractService2;
+	
+	public void voirStatus(BlockChainEstablisher establisher)
+	{
+		System.out.println();
+		if(establisher.getStatus().equals(Status.SIGNING))
+			System.out.println("Bravo contrat signé !!!");
+		else if(establisher.getStatus().equals(Status.CANCELLED))
+			System.out.println("Réponse négative, fermeture du contrat");
+		else 
+			System.out.println("Le contrat est en cours de finalisation ( attente d'une réponse positive ou négative )");
+	}
 	
 	@Test
 	public void test() 
@@ -58,8 +72,8 @@ public class ControllerTest
 		 * Establisher envoie avec start un contrat de Peer1 vers Peer2 et le garde dans Establisher
 		 */
 		BlockChainEstablisher establisher = new BlockChainEstablisher();
-		establisher.initialize(getContractService1(),getContractService2());
-		establisher.start("contrat n°1", getPeer2().getUri(),itemVoulu.getTitle(),itemAEchanger.getTitle(), this.getPeer1().getUri());
+		establisher.initialize(getPeer2().getUri(),getPeer1().getUri(),getContractService1(),getContractService2());
+		establisher.start("contrat n°1",itemVoulu.getTitle(),itemAEchanger.getTitle());
 		
 		/*
 		 * on met des pauses sinon les messages s'affiche dans le mauvais ordres
@@ -71,7 +85,22 @@ public class ControllerTest
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// On affiche le status qui devrait etre en attente de réponse
+		voirStatus(establisher);
+		
+		// Peer2 envoi une réponse favorable
 		establisher.sendWish(Wish.ACCEPT, this.getPeer1().getUri(), this.getPeer2().getUri());
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// On affiche le status qui devrait etre signé !
+		voirStatus(establisher);
 		
 		try {
 			Thread.sleep(1000);
