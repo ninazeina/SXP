@@ -14,13 +14,31 @@ import protocol.api.Wish;
 public interface ContractService extends Service 
 {
 	/**
-	 * Send contract
-	 * @param title contract title
-	 * @param who sender
-	 * @param uris target peers
+	 * 
+	 * @param title
+	 * 		titre du contrat
+	 * @param who
+	 * 		destinataire
+	 * @param itemVoulu
+	 * 		item voulu
+	 * @param itemAEchanger
+	 * 		item a echanger
+	 * @param uris
+	 * 		source
+	 * @return
+	 * 		contrat envoyé
 	 */
 	public ContractMessage sendContract(String title, String who, String itemVoulu, String itemAEchanger, String ...uris);
 	
+	/**
+	 * 
+	 * @param w
+	 * 		voeux
+	 * @param who
+	 * 		destinataire
+	 * @param uris
+	 * 		source
+	 */
 	public void sendWish(Wish w,String who, String ...uris);
 	
 	public static final String NAME = "contracts";

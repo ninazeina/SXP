@@ -10,6 +10,11 @@ import protocol.api.Status;
 import protocol.api.Wish;
 import protocol.base.BaseContract;
 
+/**
+ * 
+ * @author soriano
+ *
+ */
 public class BlockChainEstablisher {
 
 	private Wish w;
@@ -17,16 +22,23 @@ public class BlockChainEstablisher {
 	private ContractMessage contract;
 	private ContractService serviceDest;
 	private ContractService serviceSrc;
-	//private EstablisherListener l;
 	private String src;
 	private String dest;
 	
-	/*
+	/**
 	 * initialise le contrat 
 	 * Ajoute Les peers de la source et de la destinnation
 	 * Ajoute les service gerant le contrat des peer de source et destination
 	 * Permet d'envoyer et de voir(depuis la source) les réponses du destinataire
 	 * Met le voeux a neutre et le status a nul part
+	 * @param source
+	 *		PeerId du peer source du contrat
+	 * @param dest
+	 * 		PeerId du peer de destination
+	 * @param srcService 
+	 * 		service du peer source
+	 * @param destService
+	 * 		serice du peer destination
 	 */
 	public void initialize(String source, String dest,ContractService srcService, ContractService destService) {
 		this.setServiceSrc(srcService);
@@ -38,18 +50,24 @@ public class BlockChainEstablisher {
 	}
 
 	
-	 // Ajoute le contrat a l'establisher  et met le status a FINALIZED
+	 /**
+	  *  Ajoute le contrat a l'establisher  et met le status a FINALIZED
+	  * @param nomContrat
+	  * @param itemVoulu
+	  * @param itemAEchanger
+	  */
 	public void start(String nomContrat,String itemVoulu, String itemAEchanger) {
 
 		this.contract = getServiceSrc().sendContract(nomContrat,getSrc(),itemVoulu,itemAEchanger,getDest());
 		setStatus(Status.FINALIZED);
 	}
 	
-	/*
-	 * Envois le voeux de la source a la destinnation et change le status en conséquence
-	 * si la source est différent de la destination de l'establisher c'est qu'il y a une erreur
+	/**
+	 * Envois le voeux de la source a la destinnation et change le status en conséquence si la source est différent de la destination de l'establisher c'est qu'il y a une erreur
+	 * @param w
+	 * @param src
+	 * @param dest
 	 */
-	
 	public void sendWish(Wish w, String src, String dest)
 	{
 		if(src.equals(getDest()))
@@ -96,77 +114,116 @@ public class BlockChainEstablisher {
 			System.out.println("erreur la personnes essayant d'accepter le contrat n'est pas la bonne");
 	}
 	
+	/**
+	 * 
+	 * @param c
+	 */
 	public void setContract(ContractMessage c)
 	{
 		this.contract = c;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public ContractMessage getContract() {
 		return contract;
 	}
-
+	
+	/**
+	 * 
+	 * @param w
+	 */
 	public void setWish(Wish w) {
 		this.w = w;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public Wish getWish() {
 		return w;
 	}
-
+	
+	/**
+	 * 
+	 * @param status
+	 */
 	public void setStatus(Status status)
 	{
 		this.s = status;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public Status getStatus() {
 		return s;
 	}
 
-	/*public void addListener(EstablisherListener l) {
-		this.l = l;
-
-	}
-
-	public void notifyListeners(Status s) 
-	{
-		this.l.establisherEvent(s);
-	}*/
-
+	/**
+	 * 
+	 * @return
+	 */
 	public ContractService getServiceDest() {
 		return serviceDest;
 	}
 
-
+	/**
+	 * 
+	 * @param serviceDest
+	 */
 	public void setServiceDest(ContractService serviceDest) {
 		this.serviceDest = serviceDest;
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public ContractService getServiceSrc() {
 		return serviceSrc;
 	}
 
-
+	/**
+	 * 
+	 * @param serviceSrc
+	 */
 	public void setServiceSrc(ContractService serviceSrc) {
 		this.serviceSrc = serviceSrc;
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public String getSrc() {
 		return src;
 	}
 
-
+	/**
+	 * 
+	 * @param source
+	 */
 	public void setSrc(String source) {
 		this.src = source;
 	}
 
-
+	/**
+	 * 
+	 * @return
+	 */
 	public String getDest() {
 		return dest;
 	}
 
-
+	/**
+	 * 
+	 * @param dest2
+	 */
 	public void setDest(String dest2) {
 		this.dest = dest2;
 	}
