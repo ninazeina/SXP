@@ -39,7 +39,7 @@ public class JxtaContractService extends JxtaService implements ContractService
 		ContractMessage m = new ContractMessage();
 		m.setTitle(title);
 		m.setWho(who);
-		m.setSource(this.peerUri);
+		m.setDest(this.peerUri);
 		m.setItemAEchanger(itemAEchanger);
 		m.setItemVoulu(itemVoulu);
 		this.sendMessages(m, peerURIs);

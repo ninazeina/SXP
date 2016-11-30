@@ -56,47 +56,58 @@ public class ControllerTest2
 	@Test
 	public void test() 
 	{
-		//crée les pairs
+		// crée les pairs
 		setPeer1(PeerFactory.createDefaultAndStartPeerForTest());
 		setPeer2(PeerFactory.createDefaultAndStartPeerForTest());
 		System.out.println("\n");
 		
-		//ajoute les listener sur les services qui gère les contrats
-		/*setContractService1((ContractService)getPeer1().getService("contracts"));
-		setContractService2((ContractService)getPeer2().getService("contracts"));*/
-		//getContractService1().addListener(new ContractListener(), getPeer2().getUri());
-		//getContractService2().addListener(new ContractListener(), getPeer1().getUri());
+		// récupere leurs establisher
+		BlockChainEstablisher establisher1 = (BlockChainEstablisher) getPeer1().getService("establisher");
+		BlockChainEstablisher establisher2 = (BlockChainEstablisher) getPeer2().getService("establisher");
 		
-		
-		Service service1 = new BlockChainEstablisher();
-		service1.initAndStart(getPeer1());
-		BlockChainEstablisher establisher1 = (BlockChainEstablisher) service1;
-		
-		
-		Service service2 = new BlockChainEstablisher();
-		service2.initAndStart(getPeer2());
-		BlockChainEstablisher establisher2 = (BlockChainEstablisher) service2;
-		
+		// ajoute les listener 
 		establisher1.addListener(new ContractListener(), getPeer2().getUri());
 		establisher2.addListener(new ContractListener(), getPeer1().getUri());
 		
-		//créer les items
+		// créer les items
 		Item itemVoulu = new Item();
 		Item itemAEchanger = new Item();
 		
 		itemVoulu.setTitle("Patates");
 		itemAEchanger.setTitle("Carottes");
 		
+		
+		/*
+		 * On met a chaque fois des pauses sinon la communication ne fonctionne pas
+		 */
+		
 		pause(5000);
 		
+		/*
+		 * on initialise l'establisher de l'owner et on envoie un contrat a l'utilisateur 2
+		 */
 		establisher1.initialize(true,"utilisateur1");
-		establisher2.initialize(false, "utilisateur2");
-		
 		System.out.println();
+		pause(5000);
+		establisher1.sendContract("contract n°1", getPeer1().getUri(), itemVoulu.getTitle(), itemAEchanger.getTitle(), getPeer2().getUri());
+		
+		/*
+		 * On affiche les contrats
+		 */
+		pause(5000);
+		
+		establisher1.displayContract();
 		
 		pause(5000);
 		
-		establisher1.sendContract("contract n°1", "user1", itemVoulu.getTitle(), itemAEchanger.getTitle(), getPeer2().getUri());
+		establisher2.displayContract();
+		
+		pause(5000);
+		
+		/*
+		 * L'utilisateur 2 envoi son voeux
+		 */
+		establisher2.sendWish(Wish.ACCEPT, getPeer2().getUri(), getPeer1().getUri());
 		
 		pause(5000);
 		
@@ -108,18 +119,9 @@ public class ControllerTest2
 		
 		pause(5000);
 		
-		establisher2.sendWish(Wish.ACCEPT, "user2", getPeer1().getUri());
-		
-		pause(5000);
-		
-		establisher1.displayContract();
-		
-		pause(5000);
-		
-		establisher2.displayContract();
-		
-		pause(5000);
-		
+		/*
+		 * Signature de l'utilisateur 1
+		 */
 		signer(establisher1,true,getPeer2().getUri());
 		
 		pause(5000);

@@ -30,6 +30,7 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 		this.name = NAME;
 	}
 	
+	
 	/**
 	 * initialise le contrat 
 	 * Ajoute Les peers de la source et de la destinnation
@@ -50,6 +51,8 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 		setEstablisherOwner(name);
 		w = Wish.NEUTRAL;
 		s = Status.NOWHERE;
+		setSignatureAutrePartie("false");
+		setContract(null);
 	}
 
 	public void displayContract()
@@ -62,71 +65,6 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 		System.out.println("Status : "+getStatus());
 		System.out.println("signature : "+getSignatureAutrePartie()+"\n");
 	}
-	
-	 /**
-	  *  Ajoute le contrat a l'establisher  et met le status a FINALIZED
-	  * @param nomContrat
-	  * @param itemVoulu
-	  * @param itemAEchanger
-	  */
-	/*public void start(String nomContrat,String itemVoulu, String itemAEchanger) {
-
-		this.contract = getServiceSrc().sendContract(nomContrat,getSrc(),itemVoulu,itemAEchanger,getDest());
-		setStatus(Status.FINALIZED);
-	}*/
-	
-	/**
-	 * Envois le voeux de la source a la destinnation et change le status en conséquence si la source est différent de la destination de l'establisher c'est qu'il y a une erreur
-	 * @param w
-	 * @param src
-	 * @param dest
-	 */
-	/*
-	public void sendWish(Wish w, String src, String dest)
-	{
-		if(src.equals(getDest()))
-		{
-			if(getStatus().equals(Status.CANCELLED))
-				System.out.println("imposible d'envoyer le voeux le contrat et déja finis");
-			else
-			{
-				if(getStatus().equals(Status.NOWHERE))
-					System.out.println("impossible d'envoyer le voeux le contrat n'est pas encore commencé");
-				else
-				{
-					if(w.toString().equals("ACCEPT"))
-					{
-						/*
-						 * Envoyer le contrat sur la blockchain !
-						 * Pour l'instant le contrat a comme arguments :
-						 * WHO : la personne qui envoie le contrat
-						 * type : son type donc ici "contracts"
-						 * title : titre du contrat
-						 * sourceUri : destinataires du contract
-						 * itemVoulu : itemVoulu
-						 * itemAEchanger : itemAEchanger
-						 * 
-						 * voir la classe ContractMessage
-						 * 
-						 * Pour récupérer les String de ces arguments faire : getContract().getMessage("arguments");
-						 * avec arguments = WHO, type, itemVoulu, etc ..
-						 * 
-						 * bien entendu on peut changer les clauses du contrat en changeant/ rajoutants des arguments
-						 */
-	/*					setStatus(Status.SIGNING);
-					}
-					else if(w.toString().equals("REFUSE"))
-					{
-						setStatus(Status.CANCELLED);
-					}
-					setWish(w);
-					getServiceDest().sendWish(getWish(),src, dest);
-				}
-			}
-		}
-		else
-			System.out.println("erreur la personnes essayant d'accepter le contrat n'est pas la bonne");
-	}*/
 	
 	/**
 	 * 
@@ -184,7 +122,7 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 		ContractMessage m = new ContractMessage();
 		m.setTitle(title);
 		m.setWho(who);
-		m.setSource(this.peerUri);
+		m.setDest(this.peerUri);
 		m.setItemAEchanger(itemAEchanger);
 		m.setItemVoulu(itemVoulu);
 		this.sendMessages(m, uris);
@@ -248,6 +186,7 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 		
 		if(message.getMessage("type").equals("contracts")) 
 		{
+			this.initialize(false, "utilisateur2");
 			System.out.println("Mr.   "+getEstablisherOwner());
 			System.out.println("vous avez reçu un contrat :");
 			
@@ -258,7 +197,7 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 			contractMessage.setTitle(message.getMessage("title"));
 			contractMessage.setItemVoulu(message.getMessage("itemVoulu"));
 			contractMessage.setWho(message.getMessage("WHO"));
-			contractMessage.setSource(message.getMessage("source"));
+			contractMessage.setDest(message.getMessage("source"));
 			this.contract = contractMessage;
 			return;
 		}

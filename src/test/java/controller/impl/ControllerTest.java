@@ -48,21 +48,12 @@ public class ControllerTest
 		setPeer2(PeerFactory.createDefaultAndStartPeerForTest());
 		System.out.println("\n");
 		
-		//ajoute les listener sur les services qui gère les contrats
-		/*setContractService1((ContractService)getPeer1().getService("contracts"));
-		setContractService2((ContractService)getPeer2().getService("contracts"));*/
-		//getContractService1().addListener(new ContractListener(), getPeer2().getUri());
-		//getContractService2().addListener(new ContractListener(), getPeer1().getUri());
 		
 		
-		Service service1 = new BlockChainEstablisher();
-		service1.initAndStart(getPeer1());
-		BlockChainEstablisher establisher1 = (BlockChainEstablisher) service1;
+		BlockChainEstablisher establisher1 = (BlockChainEstablisher) getPeer1().getService("establisher");
 		
 		
-		Service service2 = new BlockChainEstablisher();
-		service2.initAndStart(getPeer2());
-		BlockChainEstablisher establisher2 = (BlockChainEstablisher) service2;
+		BlockChainEstablisher establisher2 = (BlockChainEstablisher) getPeer2().getService("establisher");
 		
 		establisher1.addListener(new ContractListener(), getPeer2().getUri());
 		establisher2.addListener(new ContractListener(), getPeer1().getUri());
@@ -77,7 +68,6 @@ public class ControllerTest
 		pause(10000);
 		
 		establisher1.initialize(true,"utilisateur1");
-		establisher2.initialize(false, "utilisateur2");
 		
 		System.out.println();
 		

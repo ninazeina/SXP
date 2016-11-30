@@ -58,6 +58,9 @@ public class PeerFactory {
 		
 		Service contract = new JxtaContractService();
 		contract.initAndStart(p);
+		
+		Service establisher = new BlockChainEstablisher();
+		establisher.initAndStart(p);
 		return p;
 		
 	}

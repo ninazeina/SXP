@@ -10,8 +10,8 @@ import network.impl.MessagesImpl;
  */
 public class ContractMessage extends MessagesImpl 
 {
-	@MessageElement("source")
-	private String sourceUri;
+	@MessageElement("dest")
+	private String destUri;
 	
 	@MessageElement("title")
 	private String title;
@@ -43,18 +43,18 @@ public class ContractMessage extends MessagesImpl
 	
 	/**
 	 * 
-	 * @param source
+	 * @param dest
 	 */
-	public void setSource(String source) {
-		this.sourceUri = source;
+	public void setDest(String dest) {
+		this.destUri = dest;
 	}
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public String getSource() {
-		return sourceUri;
+	public String getDest() {
+		return destUri;
 	}
 
 	/**
