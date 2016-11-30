@@ -3,16 +3,12 @@ package protocol.impl.blockChain;
 import net.jxta.pipe.PipeMsgEvent;
 import network.api.ContractService;
 import network.api.Messages;
-import network.api.Peer;
 import network.impl.jxta.JxtaService;
 import network.impl.messages.ContractMessage;
+import network.impl.messages.SignatureMessage;
 import network.impl.messages.WishMessage;
-import protocol.api.Contract;
-import protocol.api.Establisher;
-import protocol.api.EstablisherListener;
 import protocol.api.Status;
 import protocol.api.Wish;
-import protocol.base.BaseContract;
 
 /**
  * 
@@ -27,6 +23,7 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 	private boolean contractOwner;
 	private String establisherOwner;
 	public static final String NAME = "establisher";
+	private String signatureAutrePartie = "false";
 	
 	public BlockChainEstablisher ()
 	{
@@ -62,7 +59,8 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 		System.out.println(contract.getMessage("itemVoulu"));
 		System.out.println(contract.getMessage("itemAEchanger"));
 		System.out.println("Voeux : "+getWish());
-		System.out.println("Status : "+getStatus()+"\n");
+		System.out.println("Status : "+getStatus());
+		System.out.println("signature : "+getSignatureAutrePartie()+"\n");
 	}
 	
 	 /**
@@ -195,12 +193,19 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 		return m;
 	}
 
-
+	public void sendSignature(String signe, String who, String... uris)
+	{
+		SignatureMessage m = new SignatureMessage();
+		m.setSigne(signe);
+		m.setWho(who);
+		this.sendMessages(m, uris);
+	}
 	@Override
 	public void sendWish(Wish w, String who, String... uris) {
 		if(w.equals(Wish.ACCEPT))
 		{
 			setStatus(Status.SIGNING);
+			
 		}
 		else if(w.equals(Wish.REFUSE))
 		{
@@ -226,6 +231,9 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 				if(getWish().equals(Wish.ACCEPT))
 				{
 					System.out.println("Contrat accepté par les deux partie !");
+					/*
+					 * Deploiement du contrat dans la blockchain et appel du constructeur
+					 */
 					setStatus(Status.SIGNING);
 				}
 			}
@@ -237,6 +245,7 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 			super.pipeMsgEvent(event);
 			return;
 		}
+		
 		if(message.getMessage("type").equals("contracts")) 
 		{
 			System.out.println("Mr.   "+getEstablisherOwner());
@@ -253,6 +262,14 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 			this.contract = contractMessage;
 			return;
 		}
+		
+		if(message.getMessage("type").equals("signature"))
+		{
+			setSignatureAutrePartie(message.getMessage("signature"));
+			super.pipeMsgEvent(event);
+			return;
+		}
+		
 		super.pipeMsgEvent(event);
 		//this.sendMessages(getResponseMessage(message), message.getMessage("source"));
 		
@@ -271,6 +288,14 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 
 	public void setContractOwner(boolean contractOwner) {
 		this.contractOwner = contractOwner;
+	}
+
+	public String getSignatureAutrePartie() {
+		return signatureAutrePartie;
+	}
+
+	public void setSignatureAutrePartie(String signatureAutrePartie) {
+		this.signatureAutrePartie = signatureAutrePartie;
 	}
 
 }
