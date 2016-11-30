@@ -14,6 +14,7 @@ import network.impl.jxta.JxtaContractService;
 import network.impl.jxta.JxtaItemService;
 import network.impl.jxta.JxtaItemsSenderService;
 import network.impl.jxta.JxtaPeer;
+import protocol.impl.blockChain.BlockChainEstablisher;
 
 /**
  * {@link Peer} factory

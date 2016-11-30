@@ -11,7 +11,7 @@ import protocol.api.Wish;
 import protocol.impl.blockChain.BlockChainEstablisher;
 import protocol.api.Status;
 
-public class ControllerTest 
+public class ControllerTest2
 {
 	private Peer peer1;
 	private Peer peer2;
@@ -95,7 +95,7 @@ public class ControllerTest
 		
 		pause(10000);
 		
-		establisher2.sendWish(Wish.REFUSE, "user2", getPeer1().getUri());
+		establisher2.sendWish(Wish.ACCEPT, "user2", getPeer1().getUri());
 		
 		pause(10000);
 		

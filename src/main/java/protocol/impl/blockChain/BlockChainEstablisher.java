@@ -1,8 +1,12 @@
 package protocol.impl.blockChain;
 
+import net.jxta.pipe.PipeMsgEvent;
 import network.api.ContractService;
+import network.api.Messages;
 import network.api.Peer;
+import network.impl.jxta.JxtaService;
 import network.impl.messages.ContractMessage;
+import network.impl.messages.WishMessage;
 import protocol.api.Contract;
 import protocol.api.Establisher;
 import protocol.api.EstablisherListener;
@@ -15,15 +19,19 @@ import protocol.base.BaseContract;
  * @author soriano
  *
  */
-public class BlockChainEstablisher {
+public class BlockChainEstablisher extends JxtaService implements ContractService{
 
 	private Wish w;
 	private Status s;
-	private ContractMessage contract;
-	private ContractService serviceDest;
-	private ContractService serviceSrc;
-	private String src;
-	private String dest;
+	private ContractMessage contract = null;
+	private boolean contractOwner;
+	private String establisherOwner;
+	public static final String NAME = "establisher";
+	
+	public BlockChainEstablisher ()
+	{
+		this.name = NAME;
+	}
 	
 	/**
 	 * initialise le contrat 
@@ -40,15 +48,22 @@ public class BlockChainEstablisher {
 	 * @param destService
 	 * 		serice du peer destination
 	 */
-	public void initialize(String source, String dest,ContractService srcService, ContractService destService) {
-		this.setServiceSrc(srcService);
-		this.setServiceDest(destService);
-		setSrc(source);
-		setDest(dest);
+	public void initialize(boolean contractOwner, String name) {
+		setContractOwner(contractOwner);
+		setEstablisherOwner(name);
 		w = Wish.NEUTRAL;
 		s = Status.NOWHERE;
 	}
 
+	public void displayContract()
+	{
+		System.out.println("Contract de :"+getEstablisherOwner());
+		System.out.println(contract.getMessage("title"));
+		System.out.println(contract.getMessage("itemVoulu"));
+		System.out.println(contract.getMessage("itemAEchanger"));
+		System.out.println("Voeux : "+getWish());
+		System.out.println("Status : "+getStatus()+"\n");
+	}
 	
 	 /**
 	  *  Ajoute le contrat a l'establisher  et met le status a FINALIZED
@@ -56,11 +71,11 @@ public class BlockChainEstablisher {
 	  * @param itemVoulu
 	  * @param itemAEchanger
 	  */
-	public void start(String nomContrat,String itemVoulu, String itemAEchanger) {
+	/*public void start(String nomContrat,String itemVoulu, String itemAEchanger) {
 
 		this.contract = getServiceSrc().sendContract(nomContrat,getSrc(),itemVoulu,itemAEchanger,getDest());
 		setStatus(Status.FINALIZED);
-	}
+	}*/
 	
 	/**
 	 * Envois le voeux de la source a la destinnation et change le status en conséquence si la source est différent de la destination de l'establisher c'est qu'il y a une erreur
@@ -68,6 +83,7 @@ public class BlockChainEstablisher {
 	 * @param src
 	 * @param dest
 	 */
+	/*
 	public void sendWish(Wish w, String src, String dest)
 	{
 		if(src.equals(getDest()))
@@ -99,7 +115,7 @@ public class BlockChainEstablisher {
 						 * 
 						 * bien entendu on peut changer les clauses du contrat en changeant/ rajoutants des arguments
 						 */
-						setStatus(Status.SIGNING);
+	/*					setStatus(Status.SIGNING);
 					}
 					else if(w.toString().equals("REFUSE"))
 					{
@@ -112,7 +128,7 @@ public class BlockChainEstablisher {
 		}
 		else
 			System.out.println("erreur la personnes essayant d'accepter le contrat n'est pas la bonne");
-	}
+	}*/
 	
 	/**
 	 * 
@@ -164,68 +180,97 @@ public class BlockChainEstablisher {
 		return s;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public ContractService getServiceDest() {
-		return serviceDest;
+	@Override
+	public ContractMessage sendContract(String title, String who, String itemVoulu, String itemAEchanger,
+			String... uris) {
+		ContractMessage m = new ContractMessage();
+		m.setTitle(title);
+		m.setWho(who);
+		m.setSource(this.peerUri);
+		m.setItemAEchanger(itemAEchanger);
+		m.setItemVoulu(itemVoulu);
+		this.sendMessages(m, uris);
+		this.contract = m;
+		setWish(Wish.ACCEPT);
+		return m;
 	}
 
-	/**
-	 * 
-	 * @param serviceDest
-	 */
-	public void setServiceDest(ContractService serviceDest) {
-		this.serviceDest = serviceDest;
+
+	@Override
+	public void sendWish(Wish w, String who, String... uris) {
+		if(w.equals(Wish.ACCEPT))
+		{
+			setStatus(Status.SIGNING);
+		}
+		else if(w.equals(Wish.REFUSE))
+		{
+			setStatus(Status.CANCELLED);
+		}
+		WishMessage m = new WishMessage();
+		m.SetWish(w.toString());
+		m.setWho(who);
+		this.sendMessages(m, uris);
+		setWish(w);
+	}
+	
+	@Override
+	public void pipeMsgEvent(PipeMsgEvent event) {
+		Messages message = toMessages(event.getMessage());
+		if(message.getMessage("type").equals("wish")) 
+		{
+			System.out.println("Mr.   "+getEstablisherOwner());
+			System.out.println("Voeux reçu");
+			System.out.println(message.getMessage("wish")+"\n");
+			if(message.getMessage("wish").equals("ACCEPT"))
+			{
+				if(getWish().equals(Wish.ACCEPT))
+				{
+					System.out.println("Contrat accepté par les deux partie !");
+					setStatus(Status.SIGNING);
+				}
+			}
+			else if(message.getMessage("wish").equals("REFUSE"))
+			{
+				setStatus(Status.CANCELLED);
+				System.out.println("status refusé contrat abandonné");
+			}
+			super.pipeMsgEvent(event);
+			return;
+		}
+		if(message.getMessage("type").equals("contracts")) 
+		{
+			System.out.println("Mr.   "+getEstablisherOwner());
+			System.out.println("vous avez reçu un contrat :");
+			
+			super.pipeMsgEvent(event);
+			System.out.println("Acceptez vous les clauses ?\n");
+			ContractMessage contractMessage = new ContractMessage();
+			contractMessage.setItemAEchanger(message.getMessage("itemAEchanger"));
+			contractMessage.setTitle(message.getMessage("title"));
+			contractMessage.setItemVoulu(message.getMessage("itemVoulu"));
+			contractMessage.setWho(message.getMessage("WHO"));
+			contractMessage.setSource(message.getMessage("source"));
+			this.contract = contractMessage;
+			return;
+		}
+		super.pipeMsgEvent(event);
+		//this.sendMessages(getResponseMessage(message), message.getMessage("source"));
+		
+	}
+	public String getEstablisherOwner() {
+		return establisherOwner;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public ContractService getServiceSrc() {
-		return serviceSrc;
+	public void setEstablisherOwner(String establisherOwner) {
+		this.establisherOwner = establisherOwner;
 	}
 
-	/**
-	 * 
-	 * @param serviceSrc
-	 */
-	public void setServiceSrc(ContractService serviceSrc) {
-		this.serviceSrc = serviceSrc;
+	public boolean isContractOwner() {
+		return contractOwner;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String getSrc() {
-		return src;
-	}
-
-	/**
-	 * 
-	 * @param source
-	 */
-	public void setSrc(String source) {
-		this.src = source;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String getDest() {
-		return dest;
-	}
-
-	/**
-	 * 
-	 * @param dest2
-	 */
-	public void setDest(String dest2) {
-		this.dest = dest2;
+	public void setContractOwner(boolean contractOwner) {
+		this.contractOwner = contractOwner;
 	}
 
 }
