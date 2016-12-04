@@ -39,6 +39,7 @@ public class EthereumImpl implements EthereumSXP {
 	private Map<ByteArrayWrapper, TransactionReceipt> txWaiters =
 			Collections.synchronizedMap(new HashMap<ByteArrayWrapper, TransactionReceipt>());
 
+	//Contract Src to compile and deploy
 	private String contractSrc =
 
 			"contract Signature {" +
@@ -124,7 +125,7 @@ public class EthereumImpl implements EthereumSXP {
 
 	/////////////////////////////////////////////
 
-
+	//Compile contract Src and check Result compilation
 	@Override
 	public Result compileContrat(String contrat) throws IOException {
 		byte[] contratBytes = contrat.getBytes() ;
@@ -135,6 +136,7 @@ public class EthereumImpl implements EthereumSXP {
 		return resultat ;
 	}
 
+	//Create Metadata to deploy on BlockChain
 	@Override
 	public ContractMetadata createData(Result contratCompiler) throws IOException {
 		CompilationResult resultCompil = CompilationResult.parse(contratCompiler.output);
@@ -148,6 +150,7 @@ public class EthereumImpl implements EthereumSXP {
 		return metadata ;
 	}
 
+	//Deploy contract and Wait Transaction include
 	@Override
 	public TransactionReceipt sendTxAndWait(ECKey senderAddress, byte[] receiveAddress, byte[] data) throws Exception {
 		BigInteger nonce = ethereum.getRepository().getNonce(senderAddress.getAddress());
@@ -166,6 +169,7 @@ public class EthereumImpl implements EthereumSXP {
 		return waitForTx(tx.getHash());
 	}
 
+	//Function call into sendTxAndWait for check each block if Tx include
 	@Override
 	public TransactionReceipt waitForTx(byte[] txHash) throws Exception {
 		ByteArrayWrapper txHashW = new ByteArrayWrapper(txHash);
@@ -189,6 +193,7 @@ public class EthereumImpl implements EthereumSXP {
 			}
 		}	}
 
+	//Call contract Constructor on blockChain
 	public void contractBlockChainConstructor(String user1, String user2, String itemUser1, String itemUser2) throws Exception {
 		CallTransaction.Function Sign = getContractABI().getConstructor() ;
 		byte[] functionCallBytes = Sign.encode(
@@ -200,11 +205,13 @@ public class EthereumImpl implements EthereumSXP {
 		System.out.println("Constructeur OK\n\n");
 	}
 
+	//Call function with No Args of our contract
 	public void callFunctNoArgs(String functionName) throws Exception {
 		TransactionReceipt receipt2 = sendTxAndWait(sender, getContractAddr(),
 				getContractABI().getByName(functionName).encode());
 	}
 
+	//Return value of get function of our contract
 	public Object getReturnContract(String functionName) throws Exception {
 		ProgramResult r = ethereum.callConstantFunction(Hex.toHexString(getContractAddr()),
 				getContractABI().getByName(functionName));
@@ -279,17 +286,22 @@ public class EthereumImpl implements EthereumSXP {
 						CallTransaction.Contract contract = new CallTransaction.Contract(metadata.abi);
 						setContractABI(contract);
 						////////////////////////////////////////////////
+						//	Call contract Contructor on BlockChain
 						contractBlockChainConstructor(
 								"49a337147d9249ffe437a780fd6ba1ffd3e2bdad",
 								"0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f",
 								"velo",
 								"carotte" 
 								);
-
+						////////////////////////////////////////////////
+						// Check signature init User1 on BlockChain
 						System.out.println("\nPeer1 signed init ? : " + getReturnContract("getU1") +"\n");
 						///////////////////////////////////////////////////////////////////
+						//	Call signature function on BlockChain
 						callFunctNoArgs("signatureUser1");
 						System.out.println("\nPeer1 signing ... \n");
+						/////////////////////////////////////////////////
+						//	Check contract's modifications (signature User1) on BlockChain
 						System.out.println("\nPeer1 signed init ? : " + getReturnContract("getU1") +"\n");
 
 
