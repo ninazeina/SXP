@@ -213,6 +213,7 @@ public class EthereumImpl implements EthereumSXP {
 	}
 	
 	//For deployment and Call constructor
+	//Sign for test
 	public class deployContract implements Runnable {
 
 		@Override
@@ -311,6 +312,7 @@ public class EthereumImpl implements EthereumSXP {
 
 	}
 
+	//Call signature function and get it
 	public class signContract implements Runnable {
 
 		public void run() {
