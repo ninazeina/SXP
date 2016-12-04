@@ -137,7 +137,8 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 		m.setSigne(signe);
 		m.setWho(who);
 		this.sendMessages(m, uris);
-		new Thread(eth.new signContract()).start();
+		//Send signature on BlockChain
+		//new Thread(eth.new signContract()).start();
 
 	}
 	@Override
@@ -173,7 +174,7 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 					System.out.println("Contrat accepté par les deux partie !");
 					
 					//Deploye contract on Ropsten 
-					new Thread(eth.new deployContract()).run();
+					//new Thread(eth.new deployContract()).run();
 					
 					setStatus(Status.SIGNING);
 				}

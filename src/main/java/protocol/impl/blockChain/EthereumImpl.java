@@ -262,8 +262,6 @@ public class EthereumImpl implements EthereumSXP {
 						e.printStackTrace();
 					}
 				} else {
-					//Init Sender and Receipt Address
-					ECKey sender = ECKey.fromPrivate(Hex.decode("287fc6941394e06872850966e20fe190ad43b3d0a3caa82e42cd077a6aaeb8b5"));
 
 					SolidityCompiler.Result result;
 					try {
@@ -378,7 +376,7 @@ public class EthereumImpl implements EthereumSXP {
 					}
 					//Exit when execution Successful
 					ethereum.close();
-					System.exit(1);
+					System.exit(13);
 				}
 			}
 		}
