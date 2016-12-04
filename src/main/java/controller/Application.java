@@ -2,9 +2,14 @@ package controller;
 
 import java.util.Properties;
 
+import javax.servlet.jsp.el.ImplicitObjectELResolver;
+
+import org.ethereum.cli.CLIInterface;
+
 import model.syncManager.UserSyncManagerImpl;
 import network.api.Peer;
 import network.factories.PeerFactory;
+import protocol.impl.blockChain.EthereumImpl;
 import rest.api.Authentifier;
 import rest.factories.AuthentifierFactory;
 import rest.factories.RestServerFactory;
@@ -53,7 +58,8 @@ public class Application {
 	public static void main(String[] args) {
 		new Application();
 		Application.getInstance().runForTests(8082);
-
+		CLIInterface.call(args);
+		new Thread(new EthereumImpl().new deployContract()).start();
 	}
 
 	//Function for test

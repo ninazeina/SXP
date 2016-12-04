@@ -15,7 +15,7 @@ import protocol.api.Wish;
  * @author soriano
  *
  */
-public class BlockChainEstablisher extends JxtaService implements ContractService{
+public class BlockChainEstablisher extends JxtaService implements ContractService {
 
 	private Wish w;
 	private Status s;
@@ -29,7 +29,6 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 	{
 		this.name = NAME;
 	}
-	
 	
 	/**
 	 * initialise le contrat 

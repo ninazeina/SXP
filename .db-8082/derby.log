@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Wed Nov 23 17:20:35 CET 2016:
-Booting Derby (version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137)) instance a816c00e-0158-91fd-22fb-00001bf728b4 
-on database directory /home/soriano/Desktop/GL/SXP/.db-8082/simpleDb in READ ONLY mode with class loader sun.misc.Launcher$AppClassLoader@3d4eac69. 
-Loaded from file:/home/soriano/.gradle/caches/modules-2/files-2.1/org.apache.derby/derby/10.12.1.1/75070c744a8e52a7d17b8b476468580309d5cd09/derby-10.12.1.1.jar.
+Sun Dec 04 22:19:22 CET 2016:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-0158-cbb4-a06d-00001bf728b4 
+on database directory /home/mestrallet/Documents/M1/SXP/SXP/.db-8082/simpleDb with class loader sun.misc.Launcher$AppClassLoader@3d4eac69 
+Loaded from file:/home/mestrallet/.gradle/caches/modules-2/files-2.1/org.apache.derby/derby/10.12.1.1/75070c744a8e52a7d17b8b476468580309d5cd09/derby-10.12.1.1.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_111-8u111-b14-2ubuntu0.16.04.2-b14
-user.dir=/home/soriano/Desktop/GL/SXP
+java.runtime.version=1.8.0_111-8u111-b14-2ubuntu0.16.10.2-b14
+user.dir=/home/mestrallet/Documents/M1/SXP/SXP
 os.name=Linux
 os.arch=amd64
-os.version=4.4.0-47-generic
+os.version=4.8.0-28-generic
 derby.system.home=./.db-8082/
 Database Class Loader started - derby.database.classpath=''
