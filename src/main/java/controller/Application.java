@@ -58,7 +58,8 @@ public class Application {
 	public static void main(String[] args) {
 		new Application();
 		Application.getInstance().runForTests(8082);
-		///////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////////////////
+		//To Test EthereumImpl protocol with deployment, call function and modify SmartContract's state
 		CLIInterface.call(args);
 		new Thread(new EthereumImpl().new deployContract()).start();
 	}

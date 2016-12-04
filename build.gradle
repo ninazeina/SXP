@@ -9,6 +9,16 @@ mainClassName = "controller.Application"
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
 repositories {
+    maven {
+        url 'https://oss.jfrog.org/libs-snapshot/'
+    }
+}
+
+dependencies {
+    compile 'org.ethereum:ethereumj-core:1.3.9-RELEASE'
+}
+
+repositories {
     mavenCentral()
     maven {
     	url 'http://www.janus-project.org/maven'

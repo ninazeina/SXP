@@ -275,34 +275,41 @@ public class EthereumImpl implements EthereumSXP {
 					try {
 						////////////////////////////////////////////////
 						//COMPILATION
+						System.out.println("\n\nCompilation ... \n\n");
 						result = compileContrat(contractSrc);
 						ContractMetadata metadata = createData(result) ;
+						System.out.println("\n\nCompilation SUCCESS !\n\n");
 						////////////////////////////////////////////////
 						//SEND Tx
 						TransactionReceipt receipt = sendTxAndWait(sender, null, Hex.decode(metadata.bin)) ;
 						////////////////////////////////////////////////
 						//GET Receipt Tx and CALL FUNCTION
 						setContractAdr(receipt.getTransaction().getContractAddress()) ;
+						System.out.println("\n\nDeployment SUCCESS ! \ncontractAddr : " 
+								+ Hex.toHexString(getContractAddr()) + "\n\n");
 						CallTransaction.Contract contract = new CallTransaction.Contract(metadata.abi);
 						setContractABI(contract);
 						////////////////////////////////////////////////
 						//	Call contract Contructor on BlockChain
+						System.out.println("\n\nCall contract Constructor ...\n\n");
 						contractBlockChainConstructor(
 								"49a337147d9249ffe437a780fd6ba1ffd3e2bdad",
 								"0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f",
 								"velo",
 								"carotte" 
 								);
+						System.out.println("\n\nContract MODIFIED with Constructor !\n\n");
 						////////////////////////////////////////////////
 						// Check signature init User1 on BlockChain
-						System.out.println("\nPeer1 signed init ? : " + getReturnContract("getU1") +"\n");
+						System.out.println("\n\nPeer1 signed init ? : " + getReturnContract("getU1") +"\n\n");
 						///////////////////////////////////////////////////////////////////
 						//	Call signature function on BlockChain
+						System.out.println("\nPeer1 signing ... \n");
 						callFunctNoArgs("signatureUser1");
 						System.out.println("\nPeer1 signing ... \n");
 						/////////////////////////////////////////////////
 						//	Check contract's modifications (signature User1) on BlockChain
-						System.out.println("\nPeer1 signed init ? : " + getReturnContract("getU1") +"\n");
+						System.out.println("\n\nPeer1 signed SUCCESS : " + getReturnContract("getU1") +"\n\n");
 
 
 					} catch (Exception e1) {
