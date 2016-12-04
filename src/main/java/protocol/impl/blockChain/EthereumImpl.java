@@ -321,9 +321,10 @@ public class EthereumImpl implements EthereumSXP {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+					System.out.println("\n\nProtocol succeed ! Ending the process ...\n\n");
 					//Exit when execution Successful
 					ethereum.close();
-					System.exit(1);
+					System.exit(13);
 				}
 			}
 
