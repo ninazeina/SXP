@@ -172,6 +172,7 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 				{
 					System.out.println("Contrat accepté par les deux partie !");
 					
+					//Deploye contract on Ropsten 
 					new Thread(eth.new deployContract()).run();
 					
 					setStatus(Status.SIGNING);
