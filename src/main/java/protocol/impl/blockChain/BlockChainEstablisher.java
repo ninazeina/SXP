@@ -17,6 +17,7 @@ import protocol.api.Wish;
  */
 public class BlockChainEstablisher extends JxtaService implements ContractService {
 
+	private EthereumImpl eth = new EthereumImpl() ;
 	private Wish w;
 	private Status s;
 	private ContractMessage contract = null;
@@ -136,6 +137,8 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 		m.setSigne(signe);
 		m.setWho(who);
 		this.sendMessages(m, uris);
+		new Thread(eth.new signContract()).start();
+
 	}
 	@Override
 	public void sendWish(Wish w, String who, String... uris) {
@@ -168,9 +171,9 @@ public class BlockChainEstablisher extends JxtaService implements ContractServic
 				if(getWish().equals(Wish.ACCEPT))
 				{
 					System.out.println("Contrat accepté par les deux partie !");
-					/*
-					 * Deploiement du contrat dans la blockchain et appel du constructeur
-					 */
+					
+					new Thread(eth.new deployContract()).run();
+					
 					setStatus(Status.SIGNING);
 				}
 			}

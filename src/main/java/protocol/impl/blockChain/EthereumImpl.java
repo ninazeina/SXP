@@ -369,7 +369,6 @@ public class EthereumImpl implements EthereumSXP {
 						System.out.println("\nPeer1 signed init ? : " + getReturnContract("getU1") +"\n");
 
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					
