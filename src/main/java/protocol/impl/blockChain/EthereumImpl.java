@@ -292,11 +292,6 @@ public class EthereumImpl implements EthereumSXP {
 						callFunctNoArgs("signatureUser1");
 						System.out.println("\nPeer1 signing ... \n");
 						System.out.println("\nPeer1 signed init ? : " + getReturnContract("getU1") +"\n");
-						
-						ProgramResult r2 = ethereum.callConstantFunction(Hex.toHexString(getContractAddr()),
-								contract.getByName("get")) ;
-						Object[] ret2 = contract.getByName("get").decodeResult(r2.getHReturn());
-						System.out.println("\nPeer1 signed ? : " + ret2[0] + "\n");
 
 
 					} catch (Exception e1) {
@@ -366,51 +361,18 @@ public class EthereumImpl implements EthereumSXP {
 						e.printStackTrace();
 					}
 				} else {
-					//Init Sender and Receipt Address
-					ECKey sender = ECKey.fromPrivate(Hex.decode("287fc6941394e06872850966e20fe190ad43b3d0a3caa82e42cd077a6aaeb8b5"));
 
-					SolidityCompiler.Result result;
 					try {
-						////////////////////////////////////////////////
-						//COMPILATION
-						result = compileContrat(contractSrc);
-						ContractMetadata metadata = createData(result) ;
-						////////////////////////////////////////////////
-						//SEND Tx
-						TransactionReceipt receipt = sendTxAndWait(sender, null, Hex.decode(metadata.bin)) ;
-						////////////////////////////////////////////////
-						//GET Receipt Tx and CALL FUNCTION
-						setContractAdr(receipt.getTransaction().getContractAddress()) ;
-						CallTransaction.Contract contract = new CallTransaction.Contract(metadata.abi);
-						////////////////////////////////////////////////
-						CallTransaction.Function Sign = contract.getConstructor() ;
-						byte[] functionCallBytes = Sign.encode(
-								"49a337147d9249ffe437a780fd6ba1ffd3e2bdad",
-								"0f3bce1d0d5bf08310ca3965260b6d0ae3e5b06f",
-								"velo",
-								"carotte");
-						TransactionReceipt receipt1 = sendTxAndWait(sender, getContractAddr(), functionCallBytes);
-						System.out.println("Constrcteur OK\n\n");
-
-						ProgramResult r = ethereum.callConstantFunction(Hex.toHexString(getContractAddr()),
-								contract.getByName("get"));
-						Object[] ret = contract.getByName("get").decodeResult(r.getHReturn());
-						System.out.println("\nPeer1 signed init ? : " + ret[0] +"\n");
-						///////////////////////////////////////////////////////////////////
-						TransactionReceipt receipt2 = sendTxAndWait(sender, getContractAddr(),
-								contract.getByName("signatureUser1").encode());
+						System.out.println("\nPeer1 signed init ? : " + getReturnContract("getU1") +"\n");
+						callFunctNoArgs("signatureUser1");
 						System.out.println("\nPeer1 signing ... \n");
-						ProgramResult r2 = ethereum.callConstantFunction(Hex.toHexString(getContractAddr()),
-								contract.getByName("get")) ;
-						Object[] ret2 = contract.getByName("get").decodeResult(r2.getHReturn());
-						System.out.println("\nPeer1 signed ? : " + ret2[0] + "\n");
-
+						System.out.println("\nPeer1 signed init ? : " + getReturnContract("getU1") +"\n");
 
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
+					
 					try {
 						sleep(5000);
 					} catch (InterruptedException e) {
