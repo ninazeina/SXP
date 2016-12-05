@@ -15,7 +15,6 @@ SXPManager.xml
 /bootstrap.xml
 /build/
 .peer*
-db*
 src/main/javascript/client/SXP*
 /database-ropsten/
 /logs/
